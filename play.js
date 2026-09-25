@@ -161,7 +161,7 @@ function render() {
 function shellHeader(subtitle) {
   return `
     <div class="brand">
-      <div class="brand__mark">M</div>
+      <div class="brand__mark"><img src="iima-logo.png" alt="IIMA" /></div>
       <div>
         <div class="brand__name">${escapeHtml(game?.name || "Median Choice")}</div>
         <div class="brand__tag">${subtitle}</div>

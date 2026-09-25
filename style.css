@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --ink: #12181b;
-  --panel: #1b2328;
-  --panel-raised: #232c32;
-  --line: #333f46;
-  --text: #ede7d9;
-  --text-muted: #8c9296;
-  --accent: #c89b3c;
-  --accent-strong: #e0b658;
-  --positive: #5fa579;
-  --negative: #c1553d;
+  --ink: #f4f5f7;
+  --panel: #ffffff;
+  --panel-raised: #ebedf1;
+  --line: #dfe2e8;
+  --text: #20242c;
+  --text-muted: #5b6472;
+  --accent: #2e4f8c;
+  --accent-strong: #16294f;
+  --positive: #2f7d4f;
+  --negative: #a83232;
   --radius: 10px;
   --serif: "Fraunces", Georgia, serif;
   --sans: "Inter", system-ui, sans-serif;
@@ -26,12 +26,6 @@ html, body {
   font-family: var(--sans);
   font-size: 16px;
   line-height: 1.5;
-}
-
-body {
-  background-image:
-    radial-gradient(circle at 15% 0%, rgba(200, 155, 60, 0.07), transparent 40%),
-    radial-gradient(circle at 85% 100%, rgba(95, 165, 121, 0.05), transparent 45%);
 }
 
 h1, h2, h3 {
@@ -80,23 +74,22 @@ a { color: var(--accent-strong); }
 
 .brand {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 28px;
 }
 
 .brand__mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  background: linear-gradient(160deg, var(--accent-strong), var(--accent) 70%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--serif);
-  font-weight: 700;
-  color: #1a1408;
   flex-shrink: 0;
+}
+
+.brand__mark img {
+  display: block;
+  height: 52px;
+  width: auto;
 }
 
 .brand__name {
@@ -191,6 +184,7 @@ button {
   font-size: 0.95rem;
   font-weight: 600;
   width: 100%;
+  text-decoration: none;
   transition: border-color 0.15s ease, transform 0.05s ease;
 }
 
@@ -199,9 +193,9 @@ button {
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .btn--primary {
-  background: linear-gradient(160deg, var(--accent-strong), var(--accent) 85%);
+  background: linear-gradient(160deg, var(--accent), var(--accent-strong) 85%);
   border-color: transparent;
-  color: #1a1408;
+  color: #ffffff;
 }
 
 .btn--primary:hover { border-color: transparent; filter: brightness(1.05); }
@@ -247,7 +241,7 @@ button {
 .chip.is-selected {
   background: var(--accent);
   border-color: var(--accent);
-  color: #1a1408;
+  color: #ffffff;
   font-weight: 700;
   transform: scale(1.04);
 }
@@ -396,6 +390,35 @@ table.leaderboard tr:last-child td { border-bottom: none; }
 }
 
 .copy-row { display: flex; align-items: center; gap: 10px; }
+
+.topnav {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.topnav a {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.topnav a:hover { color: var(--accent-strong); }
+
+.gate-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 500;
+}
+
+.gate-panel {
+  max-width: 380px;
+  width: 100%;
+}
 
 @media (max-width: 480px) {
   .chip-grid { grid-template-columns: repeat(5, 1fr); }

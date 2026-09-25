@@ -6,6 +6,7 @@ import {
 } from "./game-engine.js";
 import { DEFAULT_PAYOFF_TABLE, MIN_CHOICE, MAX_CHOICE } from "./payoff-table.js";
 import { toast, fmtSigned, fmt1, downloadCsv, escapeHtml } from "./util.js";
+import { requireInstructorGate } from "./instructor-gate.js";
 
 const params = new URLSearchParams(location.search);
 const gameId = params.get("game");
@@ -18,7 +19,7 @@ let game = null;
 const groupsMeta = {}; // groupId -> { group, members, round, unsubMembers, unsubRound, watchedRound }
 let leaderboard = [];
 
-init();
+requireInstructorGate().then(init);
 
 async function init() {
   const uid = await ensureSignedIn();
