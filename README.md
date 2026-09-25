@@ -25,7 +25,7 @@ required beyond Firebase's free Spark tier for a normal class size.
 
 ## The payoff table
 
-`public/js/payoff-table.js` contains the 14×14 table transcribed from the
+`payoff-table.js` contains the 14×14 table transcribed from the
 handout you photographed. One cell — **choice 14, median 14**, the
 bottom-right corner — sat on a torn edge of the page and couldn't be read
 with certainty; it's currently set to `12.0` as a best estimate from the
@@ -44,7 +44,7 @@ rather fix it once in the source.
 2. Once created, click the **web** icon (`</>`) to register a web app. Skip
    Firebase Hosting setup in that wizard — we'll do it from the CLI.
 3. Copy the `firebaseConfig` object it shows you into
-   `public/js/firebase-config.js`, replacing the placeholder values.
+   `firebase-config.js`, replacing the placeholder values.
 4. In the left sidebar, go to **Build → Authentication → Get started**, open
    the **Sign-in method** tab, and enable **Anonymous**.
 5. Go to **Build → Firestore Database → Create database**. Choose
@@ -59,7 +59,7 @@ You'll need [Node.js](https://nodejs.org/) installed first.
 npm install -g firebase-tools
 firebase login
 
-cd median-game
+cd median-game   # the folder containing index.html, firebase.json, etc.
 firebase use --add        # pick the project you just created
 firebase deploy --only firestore:rules,hosting
 ```
@@ -109,35 +109,38 @@ students before you deploy for real.
 ## Alternative: host on Vercel instead of Firebase Hosting
 
 Firestore + Anonymous Auth (the backend) always live in Firebase regardless
-of where the static files are served from. If you'd rather host the site
-itself on Vercel (e.g. for GitHub-integrated auto-deploys), everything in
-this repo already supports that — `vercel.json` points Vercel at the
-`public/` folder as the site root, no build step needed. See the full
-GitHub + Vercel + Firebase walkthrough in the chat where this project was
-generated, or in short: push this repo to GitHub, import it in Vercel
-(it auto-detects `vercel.json`), deploy the Firestore rules once with the
-Firebase CLI (`firebase deploy --only firestore:rules`), and add your
-Vercel domain under Firebase Console → Authentication → Settings →
-Authorized domains.
+of where the static files are served from. Every file in this project sits
+at a single flat level on purpose — no `public/`, `css/`, or `js/`
+subfolders — so it deploys correctly no matter how it lands on GitHub,
+including via GitHub's drag-and-drop web uploader (which often flattens
+folder structure anyway). To host on Vercel: push this repo to GitHub,
+import it at vercel.com/new (no build command or output directory needed —
+it's already flat, so Vercel serves it as-is), deploy the Firestore rules
+once with the Firebase CLI (`firebase deploy --only firestore:rules`), and
+add your Vercel domain under Firebase Console → Authentication → Settings
+→ Authorized domains.
 
 ## Project structure
+
+Everything is flat — one directory, no subfolders — so it survives being
+uploaded any which way:
 
 ```
 firebase.json            Hosting + Firestore config
 firestore.rules          Security rules (see the trust-model note inside)
 firestore.indexes.json   (empty — nothing here needs a composite index)
-public/
-  index.html             Landing page
-  join.html / js/join.js Student join flow
-  play.html / js/play.js Student round-by-round game screen
-  admin.html / js/admin.js       Create-a-game / reopen-a-game
-  dashboard.html / js/dashboard.js  Live instructor dashboard
-  js/game-engine.js      All Firestore reads/writes/transactions
-  js/payoff-table.js     The 14×14 payoff table + median/lookup helpers
-  js/firebase-init.js    Firebase SDK bootstrap + anonymous sign-in
-  js/firebase-config.js  ← put your Firebase project keys here
-  js/util.js             Small shared helpers
-  css/style.css          Styling
+vercel.json              Vercel config (no build step needed)
+index.html               Landing page
+join.html / join.js      Student join flow
+play.html / play.js      Student round-by-round game screen
+admin.html / admin.js    Create-a-game / reopen-a-game
+dashboard.html / dashboard.js  Live instructor dashboard
+game-engine.js           All Firestore reads/writes/transactions
+payoff-table.js          The 14×14 payoff table + median/lookup helpers
+firebase-init.js         Firebase SDK bootstrap + anonymous sign-in
+firebase-config.js       ← put your Firebase project keys here
+util.js                  Small shared helpers
+style.css                Styling
 ```
 
 ## Security model — please read before using this for anything high-stakes
