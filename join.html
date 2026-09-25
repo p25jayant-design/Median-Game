@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Join a game — Median Choice</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page page--center">
+    <div class="shell">
+      <div class="brand">
+        <div class="brand__mark">M</div>
+        <div>
+          <div class="brand__name">Median Choice</div>
+          <div class="brand__tag">Join your group</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Enter the game code</h2>
+        <p>Your instructor will read this out or write it on the board.</p>
+
+        <form id="join-form">
+          <div class="field">
+            <label for="code">Game code</label>
+            <input type="text" id="code" autocomplete="off" autocapitalize="characters"
+                   maxlength="6" placeholder="e.g. 7K3QP" required />
+          </div>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" autocomplete="name" maxlength="40"
+                   placeholder="As it should appear to your group" required />
+          </div>
+          <button class="btn btn--primary" type="submit" id="join-btn">Join group</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/join.js"></script>
+</body>
+</html>

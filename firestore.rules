@@ -1,0 +1,99 @@
+rules_version = '2';
+
+// ---------------------------------------------------------------------------
+// Trust model (read this before deploying):
+//
+// - Anyone can sign in anonymously (no email/password), so "signed in" just
+//   means "opened the site". Real identity is a display name students type
+//   in themselves — fine for an in-class exercise, NOT for anything where
+//   impersonation matters.
+// - The instructor who creates a game is recorded as its `adminUid` and is
+//   the only account allowed to change game-level settings, force-resolve
+//   rounds, etc. If they need the dashboard on a second device, the app can
+//   "reclaim" adminUid using the game's admin passcode — but since the game
+//   document is readable by any signed-in student, that passcode is only a
+//   speed bump, not real secrecy. Don't reuse it anywhere sensitive.
+// - Round resolution (computing the median + everyone's payoff) is written
+//   by whichever group member's browser gets there first. Any of the 8
+//   group members is trusted to write the correct payoffs for the whole
+//   group — there's no server recomputing it. Fine for a graded-for-
+//   participation classroom game; not appropriate for anything with real
+//   money on the line.
+// ---------------------------------------------------------------------------
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+
+    function gameData(gameId) {
+      return get(/databases/$(database)/documents/games/$(gameId)).data;
+    }
+
+    function isAdmin(gameId) {
+      return signedIn() && gameData(gameId).adminUid == uid();
+    }
+
+    function isMember(gameId, groupId) {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/games/$(gameId)/groups/$(groupId)/members/$(uid()));
+    }
+
+    match /games/{gameId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.adminUid == uid();
+      allow delete: if isAdmin(gameId);
+
+      allow update: if signedIn() && (
+        isAdmin(gameId) ||
+        // first claim: nobody owns this game yet
+        ( resource.data.adminUid == null && request.resource.data.adminUid == uid() &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['adminUid']) ) ||
+        // reclaim on a new device: must echo the existing passcode back
+        ( request.resource.data.diff(resource.data).affectedKeys().hasOnly(['adminUid', 'reclaimAttempt']) &&
+          request.resource.data.adminUid == uid() &&
+          request.resource.data.reclaimAttempt == resource.data.adminPasscode )
+      );
+
+      match /groups/{groupId} {
+        allow read: if signedIn();
+        allow create: if isAdmin(gameId);
+        allow delete: if isAdmin(gameId);
+
+        allow update: if signedIn() && (
+          isAdmin(gameId) ||
+          isMember(gameId, groupId) ||
+          // joining: only allowed to bump memberCount by exactly 1, and only if there's room
+          ( request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberCount']) &&
+            request.resource.data.memberCount == resource.data.memberCount + 1 &&
+            resource.data.memberCount < resource.data.capacity )
+        );
+
+        match /members/{memberUid} {
+          allow read: if signedIn();
+          allow create: if signedIn() && uid() == memberUid;
+          allow update: if signedIn() && ( uid() == memberUid || isAdmin(gameId) );
+          allow delete: if isAdmin(gameId);
+        }
+
+        match /rounds/{roundId} {
+          allow read: if signedIn();
+          allow create: if signedIn() && ( isMember(gameId, groupId) || isAdmin(gameId) );
+          allow update: if signedIn() && ( isMember(gameId, groupId) || isAdmin(gameId) );
+        }
+      }
+
+      match /players/{playerUid} {
+        allow read: if signedIn();
+        allow create: if signedIn() && uid() == playerUid;
+        allow update: if signedIn() && (
+          uid() == playerUid ||
+          isAdmin(gameId) ||
+          isMember(gameId, request.resource.data.groupId)
+        );
+        allow delete: if isAdmin(gameId);
+      }
+    }
+  }
+}

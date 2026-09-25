@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Instructor console — Median Choice</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="shell shell--wide" style="padding-top:40px;">
+      <div class="brand">
+        <div class="brand__mark">M</div>
+        <div>
+          <div class="brand__name">Median Choice</div>
+          <div class="brand__tag">Instructor console</div>
+        </div>
+      </div>
+
+      <div id="recent-games"></div>
+
+      <div class="panel">
+        <h2>Create a new game</h2>
+        <p>Set the rules once — students join with a short code from any device, no account needed.</p>
+
+        <form id="create-form">
+          <div class="field">
+            <label for="f-name">Game name</label>
+            <input type="text" id="f-name" placeholder="e.g. ECON 4310 — Section B" />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="f-rounds">Total rounds</label>
+              <input type="number" id="f-rounds" value="20" min="1" max="50" required />
+            </div>
+            <div class="field">
+              <label for="f-groupsize">Players per group</label>
+              <input type="number" id="f-groupsize" value="8" min="2" max="14" required />
+            </div>
+            <div class="field">
+              <label for="f-numgroups">Number of groups</label>
+              <input type="number" id="f-numgroups" value="5" min="1" max="60" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-passcode">Admin passcode</label>
+            <input type="text" id="f-passcode" placeholder="Lets you reopen the dashboard from another device" required />
+          </div>
+
+          <div class="field" style="display:flex; align-items:center; gap:10px;">
+            <input type="checkbox" id="f-auto" checked style="width:auto;" />
+            <label for="f-auto" style="margin:0;">Auto-resolve each round the instant a group finishes submitting</label>
+          </div>
+
+          <button type="button" class="btn btn--ghost btn--small" id="toggle-payoff" style="margin-bottom:16px;">
+            Review / edit payoff table
+          </button>
+          <div id="payoff-editor-wrap" style="display:none;"></div>
+
+          <button class="btn btn--primary" type="submit" id="create-btn">Create game</button>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Reopen a game</h2>
+        <p>Manage a game you already created, from any device.</p>
+        <form id="manage-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="m-code">Game code</label>
+              <input type="text" id="m-code" maxlength="6" autocapitalize="characters" required />
+            </div>
+            <div class="field">
+              <label for="m-passcode">Admin passcode</label>
+              <input type="text" id="m-passcode" required />
+            </div>
+          </div>
+          <button class="btn" type="submit">Open dashboard</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

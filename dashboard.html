@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Dashboard — Median Choice</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="shell shell--wide" style="padding-top:32px;">
+
+      <div id="claim-gate"></div>
+
+      <div id="dashboard" style="display:none;">
+        <div id="dash-header"></div>
+
+        <div class="panel">
+          <div class="panel__header">
+            <h2 style="margin:0;">Groups</h2>
+            <button class="btn btn--ghost btn--small" id="add-group-btn">Add group</button>
+          </div>
+          <div id="group-board" class="board"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__header">
+            <h2 style="margin:0;">Payoff table</h2>
+            <button class="btn btn--ghost btn--small" id="toggle-payoff-edit">Edit</button>
+          </div>
+          <p>Changes apply to any round that hasn't resolved yet.</p>
+          <div id="payoff-editor-wrap" style="display:none;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__header">
+            <h2 style="margin:0;">Leaderboard</h2>
+            <button class="btn btn--ghost btn--small" id="export-btn">Export results (CSV)</button>
+          </div>
+          <div id="leaderboard-wrap"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>
